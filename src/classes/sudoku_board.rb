@@ -1,28 +1,61 @@
 class SudokuBoard
     def initialize
         @cells = instantiate_board
-        @neighbors = []
+        populate_board
     end
 
     def instantiate_board
         board = []
         for row in (0..8) do
             for col in (0..8) do
-                default_value = row * 9 + (col + 1)
+                default_value = 0
                 board << SudokuCell.new(row, col, default_value)
             end
         end
         return board
     end
 
-    def identify_neighbors(cell)
-        for i in 0..9 do
-            # Get all cell addresses in relevant row and column
-            @neighbors << @cells[cell.x][i]
-            @neighbors << @cells[i][cell.y]
+    def populate_board
+        @cells.shuffle.each { |cell|
+            options = [1,2,3,4,5,6,7,8,9]
+            identify_neighbors(cell).each { |neighbor|
+                if !neighbor.equals?(cell)
+                    options.delete(neighbor.value)
+                end
+            }
 
-            # Get all cells in it's set-of-three
+            puts "\nChecking coordinates [#{cell.x},#{cell.y}] Following options available #{options}" # Testing
+
+            if options.length > 0
+                cell.value = options.shuffle[0]
+            end
+        }
+    end
+
+    def identify_neighbors(cell)
+        neighbors = []
+
+        # Get all cells in row and column
+        for i in 0..8 do
+            cells_checked = @cells.select { |c| ((c.x == cell.x && c.y == i) || (c.x == i && c.y == cell.y)) && c != nil && c.value.to_i > 0 }
+            if cells_checked.length > 0
+                neighbors << cells_checked[0]
+            end
         end
+
+        # Get all cells in block
+        col_block_index = (cell.x / 3).to_i * 3
+        row_block_index = (cell.y / 3).to_i * 3
+        for i in col_block_index..col_block_index + 2 do
+            for j in row_block_index..row_block_index + 2 do
+                cells_checked = @cells.select { |c| c.x == i && c.y == j && c.value.to_i > 0 }
+                if cells_checked.length > 0
+                    neighbors << cells_checked[0]
+                end
+            end
+        end
+        
+        return neighbors
     end
 
     def format_as_two_dimensional_array
