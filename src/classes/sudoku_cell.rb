@@ -19,12 +19,12 @@ class SudokuCell
         if @options.length > 0
             @value = @options.shuffle.shift
             @used_options[@used_options.length] = @value
-            puts "   \t(#{@x},#{@y})\tusing value [#{@value}] from options #{@options}"
+            puts "#{"|  " * $tab_depth}#{@x},#{@y}\tusing value [#{@value}] from options #{@options}"
             return true
         end
 
         # Otherwise, reset value to zero and return false, so sudoku_board will backtrack through previous options
-        puts "ERR\t(#{@x},#{@y})\treset value [ ] backtrack"
+        puts "\e[41m#{"|  " * $tab_depth}#{@x},#{@y}\e[0m"
         reset
         return false
     end

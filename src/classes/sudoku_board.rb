@@ -23,12 +23,14 @@ class SudokuBoard
             # assign_value passes the array of neighbors mapped so as to only pass an array of the neighbors' values
             if @cells[i].assign_value(identify_neighbors(@cells[i]).map { |c| c.value.to_i })
                 i += 1
+                $tab_depth = [0, $tab_depth - 1].max
             else
                 # Reset current cell to zero, reset that cell's options
                 # Also reset used_options for the previously assessed cell to cover the case of consecutive backtracks
                 @cells[i].reset()
                 @cells[i+1].reset(true)
                 i -= 1
+                $tab_depth += 1
             end
         end
     end
