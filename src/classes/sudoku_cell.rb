@@ -37,4 +37,8 @@ class SudokuCell
             @used_options.clear
         end
     end
+
+    def ==(other)
+        return @x == other.x && @y == other.y
+    end
 end

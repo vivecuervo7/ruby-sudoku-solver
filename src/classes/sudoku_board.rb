@@ -38,23 +38,17 @@ class SudokuBoard
     def identify_neighbors(cell)
         neighbors = []
         
-        # Select all cells in row and column, excluding self and cells with values of zero
+        # Select all cells in row and column, excluding self and cells with values of zero, and append them to neighbors
         for i in 0..8 do
-            cells_checked = @cells.select { |c| ((c.x == cell.x && c.y == i) || (c.x == i && c.y == cell.y)) && c != cell && c.value.to_i > 0 }
-            if cells_checked.length > 0
-                neighbors << cells_checked[0]
-            end
+            @cells.select { |c| ((c.x == cell.x && c.y == i) || (c.x == i && c.y == cell.y)) && c != cell && c.value.to_i > 0 }.each { |ch| neighbors << ch }
         end
 
-        # Select all cells in current block of nine cells, excluding self and cells with values of zero
+        # Select all cells in current block of nine cells, excluding self and cells with values of zero, and append them to neighbors
         col_block_index = (cell.x / 3).to_i * 3
         row_block_index = (cell.y / 3).to_i * 3
         for i in col_block_index..col_block_index + 2 do
             for j in row_block_index..row_block_index + 2 do
-                cells_checked = @cells.select { |c| c.x == i && c.y == j && c != cell && c.value.to_i > 0 }
-                if cells_checked.length > 0
-                    neighbors << cells_checked[0]
-                end
+                @cells.select { |c| c.x == i && c.y == j && c != cell && c.value.to_i > 0 }.each { |ch| neighbors << ch }
             end
         end
         
