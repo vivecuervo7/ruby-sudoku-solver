@@ -16,25 +16,40 @@ class SudokuBoard
     end
 
     def populate_board
-        @cells.shuffle.each { |cell|
-            options = [1,2,3,4,5,6,7,8,9]
-            identify_neighbors(cell).each { |neighbor|
-                if !neighbor.equals?(cell)
-                    options.delete(neighbor.value)
-                end
-            }
-
-            puts "\nChecking coordinates [#{cell.x},#{cell.y}] Following options available #{options}" # Testing
-
-            if options.length > 0
-                cell.value = options.shuffle[0]
+        i = 0;
+        while i < 81 do
+            if @cells[i] == nil
+                puts "Cell is Nil at index #{i}"
             end
-        }
+            #puts "\nChecking coordinates [#{@cells[i].x},#{@cells[i].y}]"# - following options available #{options}" # Testing
+            if @cells[i].assign_value(identify_neighbors(@cells[i]).map { |c| c.value.to_i })
+                i += 1
+            else
+                @cells[i].reset()
+                @cells[i+1].reset(true)
+                i -= 1
+            end
+        end
+
+        # @cells.shuffle.each { |cell|
+        #     options = [1,2,3,4,5,6,7,8,9]
+        #     identify_neighbors(cell).each { |neighbor|
+        #         if !neighbor.equals?(cell)
+        #             options.delete(neighbor.value)
+        #         end
+        #     }
+
+        #     puts "\nChecking coordinates [#{cell.x},#{cell.y}] - following options available #{options}" # Testing
+
+        #     #if options.length > 0
+        #         cell.value = options.shuffle[0]
+        #     #end
+        # }
     end
 
     def identify_neighbors(cell)
         neighbors = []
-
+        
         # Get all cells in row and column
         for i in 0..8 do
             cells_checked = @cells.select { |c| ((c.x == cell.x && c.y == i) || (c.x == i && c.y == cell.y)) && c != nil && c.value.to_i > 0 }
@@ -54,6 +69,9 @@ class SudokuBoard
                 end
             end
         end
+
+        # Remove self from neighbors
+        neighbors.delete(cell)
         
         return neighbors
     end

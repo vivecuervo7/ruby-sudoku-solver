@@ -1,5 +1,5 @@
-require "tty-prompt" # used for menu navigation and option selection
-require "tty-reader" # used to detect arrow keypresses to navigate sudoku board
+# require "tty-prompt" # used for menu navigation and option selection
+# require "tty-reader" # used to detect arrow keypresses to navigate sudoku board
 require "tty-table" # used to render sudoku board
 require_relative "classes/sudoku_board.rb"
 require_relative "classes/sudoku_cell.rb"
