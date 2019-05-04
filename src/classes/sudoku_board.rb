@@ -34,7 +34,7 @@ class SudokuBoard
         end
 
         # Sort so that program will assess those with the fewest options first in an attempt to limit backtracking
-        #@cells.sort_by! { |c| c.options.length }.reverse
+        @cells.sort_by! { |c| c.options.length }.reverse
 
         i = 0
         direction = 1
@@ -95,12 +95,16 @@ class SudokuBoard
     end
 
     def format_as_two_dimensional_array
-        # Return @cells formatted as an array, necessary for table rendering
+        # Return @cells formatted as an array, necessary for table rendering, change show_correct to disable green/red numbers indicating if match to solved puzzle
+        show_correct = true
         board = Array.new(9) { Array.new(9) }
         @cells.each { |cell|
-            correct = cell.value == @test_puzzle_answer[@cells.index(cell)].to_i
-            #board[cell.x][cell.y] = cell.value > 0 ? cell.predefined ? "\e[36m#{cell.value}\e[0m" : cell.value : " "
-            board[cell.x][cell.y] = cell.value > 0 ? cell.predefined ? "\e[36m#{cell.value}\e[0m" : correct ? "\e[32m#{cell.value}\e[0m" : "\e[31m#{cell.value}\e[0m" : " "
+            correct = cell.value == @test_puzzle_answer[cell.x + cell.y].to_i
+            if show_correct
+                board[cell.x][cell.y] = cell.value > 0 ? cell.predefined ? "\e[36m#{cell.value}\e[0m" : correct ? "\e[32m#{cell.value}\e[0m" : "\e[31m#{cell.value}\e[0m" : " "
+            else
+                board[cell.x][cell.y] = cell.value > 0 ? cell.predefined ? "\e[36m#{cell.value}\e[0m" : cell.value : " "
+            end
         }
         return board
     end
