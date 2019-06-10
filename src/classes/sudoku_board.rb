@@ -1,8 +1,9 @@
 class SudokuBoard
-    def initialize
+    def initialize(input_puzzle = "")
         @cells = instantiate_board
-        @test_puzzle = "010020300004005060070000008006900070000100002030048000500006040000800106008000000"
+        @test_puzzle = input_puzzle.length >= 81 ? input_puzzle : "010020300004005060070000008006900070000100002030048000500006040000800106008000000"
         @test_puzzle_answer = "815627394924385761673491528186952473457463982239748615591236847342879156768514239"
+        @show_correct = input_puzzle.length < 81
         populate_board(@test_puzzle)
     end
 
@@ -51,13 +52,15 @@ class SudokuBoard
         end
     end
 
-    def render_progress
+    def render_progress(show_working = false)
         table = TTY::Table.new rows: format_as_two_dimensional_array
         renderer = TTY::Table::Renderer::Unicode.new(table)
         renderer.padding = [0,1]
         renderer.border.separator = :each_row
-        puts renderer.render
-        #sleep 0.1
+        if show_working
+            puts renderer.render
+            sleep 0.1
+        end
     end
 
     def identify_neighbors(cell)
@@ -82,11 +85,10 @@ class SudokuBoard
 
     def format_as_two_dimensional_array
         # Return @cells formatted as an array, necessary for table rendering, change show_correct to disable green/red numbers indicating if match to solved puzzle
-        show_correct = true
         board = Array.new(9) { Array.new(9) }
         @cells.each { |cell|
             correct = cell.value == @test_puzzle_answer[@cells.index(cell)].to_i
-            if show_correct
+            if @show_correct
                 board[cell.x][cell.y] = cell.value > 0 ? cell.predefined ? "\e[36m#{cell.value}\e[0m" : correct ? "\e[32m#{cell.value}\e[0m" : "\e[31m#{cell.value}\e[0m" : " "
             else
                 board[cell.x][cell.y] = cell.value > 0 ? cell.predefined ? "\e[36m#{cell.value}\e[0m" : cell.value : " "
