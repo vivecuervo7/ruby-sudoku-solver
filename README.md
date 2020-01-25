@@ -1,5 +1,5 @@
 # Sudoku
-In terminal Sudoku generator and solver built in Ruby
+Terminal Based Sudoku Solver
 
 ## Usage
 Navigate to project root and run `bundle install` if first run, then `ruby src/sudoku.rb` to execute program
